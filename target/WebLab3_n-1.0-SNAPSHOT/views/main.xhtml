@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f = "http://java.sun.com/jsf/core"
+      xmlns:ace="http://www.icefaces.org/icefaces/components">
+<h:head>
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../styles/external.css"/>
+    <script type="text/javascript" src="../js/validate.js"/>
+    <script type="text/javascript" src="../js/addRow.js"/>
+    <script type="text/javascript" src="../js/plot_functions.js"/>
+    <script type="text/javascript" src="../js/draw_point.js"/>
+</h:head>
+<h:body>
+    <div id="header">
+        <h2>Zhetesova Dana p3217, v. 28705</h2>
+    </div>
+    <div id="container">
+        <div id="content">
+            <h:form onsubmit="return validate()" id="form" action="#{pointsDispatcher.addPoint}">
+                <div id="input">
+                    <table>
+                        <tr>
+                            <th id="x">
+                                <h:outputLabel for="x_input" value="X: "/>
+                                <h:outputText id="X_text" value="#{pointsDispatcher.x}"/>
+                                <div align="center" style="width: 250px; height: 35px; border: none; margin: 15px 25% 5px 25%">
+                                <ace:sliderEntry id="x_input" axis="x" clickableRail="false" length="150px" min="-2" max="2"
+                                     style="" stepPercent="25" value="#{pointsDispatcher.x}" showLabels="true">
+                                    <ace:ajax event="slide" render="form:X_text form:x_hidden" execute="form:x_input"/>
+                                </ace:sliderEntry>
+                                <h:inputText id="x_hidden" value="#{pointsDispatcher.x}" style="display: none">
+                                    <!--f:ajax event="click" render="x"/-->
+                                    <f:ajax event="click" update="form:X_text form:x_input" render="form:X_text form:x_input" execute="@this" />
+                                    <!--f:ajax event="click" update="form:X_text form:x_input" render="form:X_text form:x_input" execute="x_hidden" /-->
+                                    <!--f:ajax event="click" render="form:X_text form:x_input"/-->
+                                    <!--f:ajax event="change" render="X_text" execute="x_hidden" /-->
+                                    <!--f:ajax update="form:x_input X_text"/-->
+                                    <!--f:ajax event="valueChange" render="X_text x_input" execute="x_hidden"/-->
+                                </h:inputText>
+                                </div>
+                                <div id="alert_block_X">#{pointsDispatcher.validX}</div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <p><h:outputLabel for="y_input">Y: </h:outputLabel>
+                                    <h:inputText id="y_input" name="y" maxlength="6" pattern="^(-)?[4]((\.)\d{1,5})?$"
+                                                 onkeyup="validate_y(this.value)" value="#{pointsDispatcher.y}">
+                                        <f:ajax event="click" execute="@this"/>
+                                        <!--f:ajax event="valueChange" execute="y_input" render="y_input"/-->
+                                    </h:inputText>
+                                </p>
+                                <div id="alert_block_Y">#{pointsDispatcher.validY}</div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <p>
+                                    <h:outputLabel for="R_text" value="R: "/>
+                                    <h:outputText id="R_text" value="#{pointsDispatcher.r}"/></p>
+                                <p>
+                                    <h:commandButton id="r1" value="1" onclick="r_changed(this.value)" action="#{pointsDispatcher.setR1}" width="10px">
+                                        <f:ajax render="R_text"/>
+                                    </h:commandButton>
+                                    <h:commandButton id="r2" value="2" onclick="r_changed(this.value)" action="#{pointsDispatcher.setR2}" width="10px">
+                                        <f:ajax render="R_text"/>
+                                    </h:commandButton>
+                                    <h:commandButton id="r3" value="3" onclick="r_changed(this.value)" action="#{pointsDispatcher.setR3}" update="form" width="10px">
+                                        <f:ajax render="R_text"/>
+                                    </h:commandButton>
+                                    <h:commandButton id="r4" value="4" onclick="r_changed(this.value)" action="#{pointsDispatcher.setR4}" update="form" width="10px">
+                                        <f:ajax render="R_text"/>
+                                    </h:commandButton>
+                                    <h:commandButton id="r5" value="5" onclick="r_changed(this.value)" action="#{pointsDispatcher.setR5}" update="form" width="10px">
+                                        <f:ajax render="R_text"/>
+                                    </h:commandButton>
+                                </p>
+                                <div id="alert_block_R">#{pointsDispatcher.validR}</div>
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>
+                                <h:commandButton id="form_submit" onclick="return validate()" action="#{pointsDispatcher.addPoint}" value="Submit">
+                                    <f:ajax render="@form"/>
+                                </h:commandButton>
+                                <!--h:commandButton id="plot_submit" action="#{pointsDispatcher.addFromPlot}" style="display: none">
+                                    <f:param name="x" id="x_plot" value=""/>
+                                    <f:param name="y" id="y_plot" value=""/>
+                                    <f:ajax render="@form"/>
+                                </h:commandButton>
+                                <input type="button" id="plot_sub" onclick="mojarra.ab(this, event,'action',0,'@form',{'x':plotX,'y':plotY});return false" value="" style="display: none"/-->
+                            </th>
+                        </tr>
+                    </table>
+                    <p id="alrt">
+                    </p>
+                </div>
+                <div id="plot_and_result">
+                    <div id="plot" class="element" title="Plot">
+                        <div>
+                            <svg id="svg_plot" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"
+                                 onclick="plotClicked(evt)">
+                                <defs>
+                                    <style>
+                                        .cls-2 {
+                                            fill: none;
+                                        }
+
+                                        .cls-2, .cls-3 {
+                                            stroke: #000;
+                                            stroke-miterlimit: 10;
+                                            stroke-width: 0.5px;
+                                        }
+
+                                        .cls-4 {
+                                            font-size: 12px;
+                                        }
+
+                                        .cls-4, .cls-5 {
+                                            font-family: MyriadPro-Regular, Myriad Pro, serif;
+                                        }
+
+                                        .cls-5 {
+                                            font-size: 14px;
+                                        }</style>
+                                </defs>
+                                <title>Graph</title>
+                                <path class="cls-1"
+                                      d="M150 150 L30 150 A120,120,0,0,0,150,270 L150 150 Z"
+                                      transform="translate(0 0)"/>
+                                <polygon class="cls-1" points="210,150 150,150 150,270"/>
+                                <rect class="cls-1" x="150" y="30" width="60" height="120"/>
+                                <line class="cls-2" x1="150" y1="300" x2="150" y2="5.295"/>
+                                <polygon points="150 0 153.049 7.462 150 5.691 146.952 7.462 150 0"/>
+                                <line class="cls-2" y1="150.052" x2="294.705" y2="149.95"/>
+                                <polygon points="300 149.948 292.539 153 294.309 149.95 292.537 146.902 300 149.948"/>
+                                <path class="cls-3" d="M90.02,150l-.02.02V150Z" transform="translate(0 0)"/>
+                                <line class="cls-2" x1="210" y1="154" x2="210" y2="146"/>
+                                <line class="cls-2" x1="154" y1="210" x2="146" y2="210"/>
+                                <line class="cls-2" x1="154" y1="90" x2="146" y2="90"/>
+                                <line class="cls-2" x1="90" y1="154" x2="90" y2="146"/>
+                                <line class="cls-2" x1="154" y1="270" x2="146" y2="270"/>
+                                <line class="cls-2" x1="270" y1="154" x2="270" y2="146"/>
+                                <line class="cls-2" x1="154" y1="30" x2="146" y2="30"/>
+                                <line class="cls-2" x1="30" y1="154" x2="30" y2="146"/>
+                                <text class="cls-4" transform="translate(30 143)">-
+                                    <tspan>1</tspan>
+                                </text>
+                                <text class="cls-4" transform="translate(154 267)">-
+                                    <tspan>1</tspan>
+                                </text>
+                                <text class="cls-4" transform="translate(263 143)">
+                                    <tspan>1</tspan>
+                                </text>
+                                <text class="cls-4" transform="translate(158 40.045)">
+                                    <tspan>1</tspan>
+                                </text>
+                                <text class="cls-4 divis" transform="translate(154 207)">-
+                                    <tspan>0.5</tspan>
+                                </text>
+                                <text class="cls-4 divis" transform="translate(158 99.974)">
+                                    <tspan>0.5</tspan>
+                                </text>
+                                <text class="cls-4 divis" transform="translate(210 143)">
+                                    <tspan>0.5</tspan>
+                                </text>
+                                <text class="cls-4 divis" transform="translate(69 143)">-
+                                    <tspan>0.5</tspan>
+                                </text>
+                                <text class="cls-5" transform="translate(158 12.378)">Y</text>
+                                <text class="cls-5" transform="translate(288.666 143)">X</text>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h:button outcome="index" value="Start page" style="margin: 10px 45% 10px 45%"/>
+                </div>
+                <div id="results_wrap" class="element">
+                    <h:outputText id="test" value="#{pointsDispatcher.pointsJsons}" style="display: none"/>
+                    <table id="results_table">
+                        <tr>
+                            <td><b>Id</b></td>
+                            <td><b>X</b></td>
+                            <td><b>Y</b></td>
+                            <td><b>R</b></td>
+                            <td><b>Success</b></td>
+                        </tr>
+                        <ui:repeat value="#{pointsDispatcher.points}" var="item">
+                            <tr>
+                                <td>#{item.id}</td>
+                                <td>#{item.x}</td>
+                                <td>#{item.y}</td>
+                                <td>#{item.r}</td>
+                                <td>
+                                    <h:outputLabel value="&#9989;" rendered="#{item.success == true}" />
+                                    <h:outputLabel value="&#10060;" rendered="#{item.success == false}" />
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                    </table>
+                </div>
+                <h:outputScript>
+                    pre_init();
+                    draw_points('#{pointsDispatcher.pointsJsons}');
+                </h:outputScript>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>
