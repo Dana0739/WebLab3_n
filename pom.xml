@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>labs</groupId>
+    <artifactId>WebLab3_n</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>WebLab3_n</name>
+    <packaging>war</packaging>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <!--dependencies>
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-api</artifactId>
+            <version>2.2.18</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.faces</groupId>
+            <artifactId>jsf-impl</artifactId>
+            <version>2.2.18</version>
+        </dependency>
+    </dependencies-->
+    <dependencies>
+    <dependency>
+        <groupId>javax</groupId>
+        <artifactId>javaee-web-api</artifactId>
+        <version>8.0</version>
+        <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+        <groupId>org.icefaces</groupId>
+        <artifactId>icefaces-ace</artifactId>
+        <version>4.2.0</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.icefaces</groupId>
+        <artifactId>icefaces</artifactId>
+        <version>4.2.0</version>
+    </dependency>
+
+    </dependencies>
+
+</project>
