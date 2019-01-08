@@ -20,9 +20,9 @@ function draw_point(point) {
 
 function draw_points(a) {
     a = JSON.parse(a);
-    if (a.length !== 0 || a.length !== null) {
-        for (let i = 0; i < a.length; i++){
-            draw_point(a[i]);
+    if (a.length !== 0 && a.length !== null) {
+        for (let b of a){
+            draw_point(b);
         }
     }
 }
